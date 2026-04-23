@@ -1,0 +1,6 @@
+opencv-python>=4.8.0
+mediapipe>=0.10.0
+numpy>=1.23.0
+Flask>=3.0.0
+flask-cors>=4.0.0
+flask-socketio>=5.3.0
