@@ -667,6 +667,85 @@ def index():
         'knowledge_topics': list(KNOWLEDGE.keys())
     })
 
+# Хранилище студентов (в памяти)
+students_db = {}
+
+@app.route('/api/student/join', methods=['POST'])
+def student_join():
+    data = request.json
+    student_id = data.get('student_id')
+    display_name = data.get('display_name', student_id)
+    students_db[student_id] = {
+        'student_id': student_id,
+        'display_name': display_name,
+        'current_emotion': 'neutral',
+        'avg_engagement': 0,
+        'total_records': 0,
+        'emotion_counts': {},
+        'last_seen': datetime.now().isoformat()
+    }
+    return jsonify({'status': 'joined'})
+
+@app.route('/api/student/leave', methods=['POST'])
+def student_leave():
+    data = request.json
+    student_id = data.get('student_id')
+    students_db.pop(student_id, None)
+    return jsonify({'status': 'left'})
+
+@app.route('/api/student/frame', methods=['POST'])
+def student_frame():
+    data = request.json
+    student_id = data.get('student_id')
+    if student_id not in students_db:
+        return jsonify({'error': 'Student not found'}), 404
+
+    emotions = ['engaged', 'confused', 'bored', 'neutral', 'tired']
+    weights  = [0.35, 0.20, 0.15, 0.20, 0.10]
+    emotion  = random.choices(emotions, weights=weights)[0]
+    engagement = round(random.uniform(30, 90), 1)
+
+    s = students_db[student_id]
+    s['current_emotion'] = emotion
+    s['total_records']  += 1
+    s['last_seen']       = datetime.now().isoformat()
+    s['emotion_counts'][emotion] = s['emotion_counts'].get(emotion, 0) + 1
+    # скользящее среднее вовлечённости
+    n = s['total_records']
+    s['avg_engagement'] = round((s['avg_engagement'] * (n - 1) + engagement) / n, 1)
+
+    return jsonify({'emotion': emotion, 'engagement': engagement})
+
+@app.route('/api/teacher/status', methods=['GET'])
+def teacher_status():
+    active = list(students_db.values())
+    avg_eng = round(sum(s['avg_engagement'] for s in active) / len(active), 1) if active else 0
+
+    alerts = [
+        {'student_id': s['student_id'], 'display_name': s['display_name'], 'emotion': s['current_emotion']}
+        for s in active
+        if s['current_emotion'] in ('bored', 'tired') and s['total_records'] > 0
+    ]
+    return jsonify({'students': active, 'avg_engagement': avg_eng, 'alerts': alerts})
+
+@app.route('/api/teacher/history', methods=['GET'])
+def teacher_history():
+    # Простая история из текущей сессии (в памяти)
+    limit = int(request.args.get('limit', 100))
+    records = []
+    for s in students_db.values():
+        records.append({
+            'student_id': s['student_id'],
+            'emotion': s['current_emotion'],
+            'engagement': s['avg_engagement'],
+            'timestamp': s['last_seen'],
+            'session_date': datetime.now().strftime('%Y-%m-%d')
+        })
+    return jsonify({'records': records[:limit]})
+
+@app.route('/api/teacher/export', methods=['GET'])
+def teacher_export():
+    return jsonify({'students': list(students_db.values()), 'exported_at': datetime.now().isoformat()})
 
 if __name__ == '__main__':
     print("=" * 70)
