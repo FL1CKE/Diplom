@@ -778,31 +778,80 @@ const TeacherView = () => {
    4. СТАРТОВАЯ СТРАНИЦА
    ════════════════════════════════════════════════════════════ */
 const HomePage = () => (
-  <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center p-6">
-    <div className="text-center max-w-lg w-full">
-      <div className="text-6xl mb-4">🎓</div>
-      <h1 className="text-3xl font-bold text-gray-800 mb-2">Система мониторинга эмоций</h1>
-      <p className="text-gray-500 mb-10">Выберите роль для входа</p>
-      <div className="grid grid-cols-2 gap-4 mb-6">
-        <a href="/?mode=teacher" className="bg-white rounded-2xl shadow-md p-6 text-center hover:shadow-lg transition-all border-2 border-transparent hover:border-purple-400 block">
-          <div className="text-5xl mb-3">👨‍🏫</div><div className="font-bold text-gray-800 mb-1">Я учитель</div>
-          <div className="text-sm text-gray-400">Панель наблюдения в реальном времени</div>
+  <div style={{ minHeight: '100vh', width: '100vw', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg, #eef2ff 0%, #ffffff 50%, #f5f3ff 100%)' }}>
+    <div style={{ width: '100%', maxWidth: 680, padding: '2rem', textAlign: 'center' }}>
+
+      {/* Логотип */}
+      <div style={{ fontSize: 64, marginBottom: 16 }}>🎓</div>
+      <h1 style={{ fontSize: 32, fontWeight: 700, color: '#1e1b4b', marginBottom: 8 }}>Система мониторинга эмоций</h1>
+      <p style={{ fontSize: 16, color: '#6b7280', marginBottom: 48 }}>Выберите роль для входа в систему</p>
+
+      {/* Карточки ролей */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 24 }}>
+        <a href="/?mode=teacher" style={{
+          display: 'block', background: '#fff', borderRadius: 20,
+          boxShadow: '0 4px 24px rgba(99,102,241,.10)', padding: '2.5rem 2rem',
+          textDecoration: 'none', border: '2px solid transparent',
+          transition: 'all .2s'
+        }}
+          onMouseEnter={e => { e.currentTarget.style.borderColor = '#a78bfa'; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 32px rgba(99,102,241,.18)'; }}
+          onMouseLeave={e => { e.currentTarget.style.borderColor = 'transparent'; e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 4px 24px rgba(99,102,241,.10)'; }}
+        >
+          <div style={{ fontSize: 52, marginBottom: 14 }}>👨‍🏫</div>
+          <div style={{ fontWeight: 700, fontSize: 18, color: '#1e1b4b', marginBottom: 6 }}>Я учитель</div>
+          <div style={{ fontSize: 14, color: '#9ca3af', lineHeight: 1.5 }}>Панель наблюдения за всеми студентами в реальном времени</div>
         </a>
-        <a href="/?mode=demo" className="bg-white rounded-2xl shadow-md p-6 text-center hover:shadow-lg transition-all border-2 border-transparent hover:border-indigo-400 block">
-          <div className="text-5xl mb-3">🖥️</div><div className="font-bold text-gray-800 mb-1">Демо-режим</div>
-          <div className="text-sm text-gray-400">Одиночный режим с графиками и чатом</div>
+
+        <a href="/?mode=demo" style={{
+          display: 'block', background: '#fff', borderRadius: 20,
+          boxShadow: '0 4px 24px rgba(99,102,241,.10)', padding: '2.5rem 2rem',
+          textDecoration: 'none', border: '2px solid transparent',
+          transition: 'all .2s'
+        }}
+          onMouseEnter={e => { e.currentTarget.style.borderColor = '#6366f1'; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 32px rgba(99,102,241,.18)'; }}
+          onMouseLeave={e => { e.currentTarget.style.borderColor = 'transparent'; e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 4px 24px rgba(99,102,241,.10)'; }}
+        >
+          <div style={{ fontSize: 52, marginBottom: 14 }}>🖥️</div>
+          <div style={{ fontWeight: 700, fontSize: 18, color: '#1e1b4b', marginBottom: 6 }}>Демо-режим</div>
+          <div style={{ fontSize: 14, color: '#9ca3af', lineHeight: 1.5 }}>Одиночный режим с графиками, статистикой и AI-чатом</div>
         </a>
       </div>
-      <div className="bg-white rounded-2xl shadow-md p-5">
-        <div className="text-sm font-medium text-gray-600 mb-3">Войти как студент</div>
-        <div className="flex gap-2">
-          <input id="sid" placeholder="Введите имя (daniyar, aliya...)"
-            onKeyDown={e => { if (e.key === 'Enter') window.location.href = `/?student=${e.target.value.trim() || 'student1'}`; }}
-            className="flex-1 px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
-          <button onClick={() => { window.location.href = `/?student=${document.getElementById('sid').value.trim() || 'student1'}`; }}
-            className="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-medium transition-all">Войти</button>
+
+      {/* Блок входа студента */}
+      <div style={{ background: '#fff', borderRadius: 20, boxShadow: '0 4px 24px rgba(99,102,241,.10)', padding: '2rem' }}>
+        <div style={{ fontSize: 15, fontWeight: 600, color: '#374151', marginBottom: 12 }}>
+          👨‍💻 Войти как студент
         </div>
-        <p className="text-xs text-gray-400 mt-3">Прямая ссылка: <code className="bg-gray-100 px-1.5 py-0.5 rounded">/?student=daniyar</code></p>
+        <div style={{ display: 'flex', gap: 10 }}>
+          <input
+            id="sid"
+            placeholder="Введите имя (daniyar, aliya...)"
+            onKeyDown={e => { if (e.key === 'Enter') window.location.href = `/?student=${e.target.value.trim() || 'student1'}`; }}
+            style={{
+              flex: 1, padding: '12px 16px', border: '1.5px solid #e5e7eb',
+              borderRadius: 12, fontSize: 14, outline: 'none',
+              transition: 'border-color .2s', fontFamily: 'inherit'
+            }}
+            onFocus={e => { e.target.style.borderColor = '#6366f1'; }}
+            onBlur={e => { e.target.style.borderColor = '#e5e7eb'; }}
+          />
+          <button
+            onClick={() => { window.location.href = `/?student=${document.getElementById('sid').value.trim() || 'student1'}`; }}
+            style={{
+              padding: '12px 28px', background: '#4f46e5', color: '#fff',
+              border: 'none', borderRadius: 12, fontSize: 14, fontWeight: 600,
+              cursor: 'pointer', transition: 'background .2s', fontFamily: 'inherit'
+            }}
+            onMouseEnter={e => { e.target.style.background = '#4338ca'; }}
+            onMouseLeave={e => { e.target.style.background = '#4f46e5'; }}
+          >
+            Войти
+          </button>
+        </div>
+        <p style={{ fontSize: 12, color: '#9ca3af', marginTop: 10 }}>
+          Прямая ссылка:&nbsp;
+          <code style={{ background: '#f3f4f6', padding: '2px 8px', borderRadius: 6, fontSize: 12 }}>/?student=daniyar</code>
+        </p>
       </div>
     </div>
   </div>
